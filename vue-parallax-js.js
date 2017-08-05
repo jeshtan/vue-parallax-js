@@ -65,6 +65,17 @@ parallaxjs.prototype = {
 
       _this.setStyle(item, 'translateY(' + pos + 'px)');
     });
+  },
+  refresh: function refresh() {
+    this.items.map(function (item) {
+      var el = item.el;
+      var style = item.style;
+
+      item.initialOffsetTop = el.offsetTop + el.offsetParent.offsetTop - parseInt(style.marginTop);
+      item.clientHeight = item.modifiers.absY ? window.innerHeight : el.clientHeight || el.offsetHeight || el.scrollHeight;
+
+      return item;
+    });
   }
 };
 
@@ -81,6 +92,7 @@ var VueParallaxJs = {
     }, { passive: true });
     window.addEventListener('resize', function () {
       requestAnimationFrame(function () {
+        p.refresh(p);
         p.move(p);
       });
     }, { passive: true });

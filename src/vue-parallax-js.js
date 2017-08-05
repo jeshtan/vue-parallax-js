@@ -66,7 +66,21 @@ parallaxjs.prototype = {
 
         this.setStyle(item, 'translateY(' + pos + 'px)')
     })
+  },
+
+  refresh () {
+    this.items.map((item) => {
+      let el = item.el
+      let style = item.style
+
+      item.initialOffsetTop = el.offsetTop + el.offsetParent.offsetTop - parseInt(style.marginTop)
+      item.clientHeight = item.modifiers.absY ? window.innerHeight : el.clientHeight || el.offsetHeight || el.scrollHeight
+
+      return item;
+    })
   }
+
+  
 }
 
 let VueParallaxJs = {
@@ -80,6 +94,7 @@ let VueParallaxJs = {
     }, {passive: true})
     window.addEventListener('resize', () => {
       requestAnimationFrame(() => {
+        p.refresh(p)
         p.move(p)
       })
     }, {passive: true})
